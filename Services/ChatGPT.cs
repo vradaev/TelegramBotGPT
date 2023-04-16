@@ -17,15 +17,17 @@ namespace TelegramGPT.Services
       try
       {
         var apiKey = _configuration["ChatGPTSettings:Token"];
+        var modelGpt = _configuration["ChatGPTSettings:Model"];
+        var maxTokens = _configuration["ChatGPTSettings:MaxTokens"];
 
         var url = "https://api.openai.com/v1/completions";
 
         var jsonRequest = JsonConvert.SerializeObject(new
         {
           prompt = prompt,
-          max_tokens = 2048,
+          max_tokens = Convert.ToInt32(maxTokens),
           n = 1,
-          model = "text-davinci-003"
+          model = modelGpt
         });
 
         using (var client = new HttpClient())
