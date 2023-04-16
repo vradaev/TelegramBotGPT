@@ -1,4 +1,5 @@
-﻿using TelegramGPT.Services;
+﻿using Microsoft.Extensions.Configuration;
+using TelegramGPT.Services;
 
 namespace TelegramGPT.EndPoints.WebHook
 {
@@ -8,12 +9,19 @@ namespace TelegramGPT.EndPoints.WebHook
     public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
     public static Delegate Handle => Action;
 
-    public static async Task<IResult> Action(WebHookRequest request, ChatGPT chatGPT, TelegramBot tgBot)
+    private readonly IConfiguration _configuration;
+
+    public WebHook(IConfiguration configuration)
+    {
+      _configuration = configuration;
+    }
+
+    public static async Task<IResult> Action(WebHookRequest request, ChatGPT chatGPT, TelegramBot tgBot, IConfiguration configuration)
     {
       try
       {
-        var message = "Please use text.";
-        var botMention = $"@HelpCTMSBot";
+        var message = "Please use text."; 
+        var botMention =$"@"+configuration["TelegramSettings:BotMention"];
         if (request.Message?.Text != null && request.Message.Text.StartsWith(botMention))
         {
           // Удаляем упоминание бота из сообщения
