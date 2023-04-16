@@ -13,7 +13,7 @@ namespace TelegramGPT.EndPoints.WebHook
       try
       {
         var message = "Please use text.";
-        var botMention = $"@CarTrekDevBot";
+        var botMention = $"@HelpCTMSBot";
         if (request.Message?.Text != null && request.Message.Text.StartsWith(botMention))
         {
           // Удаляем упоминание бота из сообщения
