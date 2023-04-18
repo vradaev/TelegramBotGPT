@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System.Text;
+using Telegram.Bot.Types;
 
 namespace TelegramGPT.Services
 {
@@ -20,13 +22,14 @@ namespace TelegramGPT.Services
         var modelGpt = _configuration["ChatGPTSettings:Model"];
         var maxTokens = _configuration["ChatGPTSettings:MaxTokens"];
 
-        var url = "https://api.openai.com/v1/completions";
+        var url = "https://api.openai.com/v1/chat/completions";
 
         var jsonRequest = JsonConvert.SerializeObject(new
         {
-          prompt = prompt,
-          max_tokens = Convert.ToInt32(maxTokens),
-          n = 1,
+          messages = new[]
+    {
+        new { role = "assistant", content = prompt }
+    },
           model = modelGpt
         });
 
@@ -50,7 +53,7 @@ namespace TelegramGPT.Services
 
             dynamic responseObject = JsonConvert.DeserializeObject(jsonResponse);
 
-            return responseObject.choices[0].text;
+            return responseObject.choices[0].message.content;
           }
         }
       }
