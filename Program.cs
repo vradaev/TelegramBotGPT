@@ -11,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ChatGPT>();
 builder.Services.AddScoped<TelegramBot>();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -19,6 +21,8 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
+app.MapHealthChecks("/health");
+
 
 app.MapMethods(WebHook.Template, WebHook.Methods, WebHook.Handle);
 
